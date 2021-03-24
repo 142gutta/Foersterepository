@@ -3,4 +3,4 @@ print("Hello World")
 print("shit face")
 print ("heil")
 
-webbrowser.open("www.vg.no")
+webbrowser.open("vg.no")
