@@ -4,7 +4,7 @@ import pickle
 # Kilde brukt til det meste: https://www.techwithtim.net/tutorials/socket-programming/
 
 Format = "utf-8"
-Header = 64
+Header = 1024
 Port = 5501
 DisconnectFromServer = "!bye"     #Melding som kan sendes for å bryte forbindelsen
 
@@ -19,6 +19,7 @@ ServerSocket.bind(('', Port)) #Litt usikker på om man skal ha (' ', Port) her e
 
         #clientsocket.close()
 
+
 def handle_client (conn, addr) :  
     print(f"New connection: {addr} joined")   
     connected = True
@@ -29,10 +30,25 @@ def handle_client (conn, addr) :
             msg = conn.recv(msg_length).decode(Format)
             if msg == DisconnectFromServer:
                 break
-        if msg == "Weather":
-            pickle.loads(msg)
                 
     conn.close()
+def handle_client2 (conn, addr):
+    print("its pickle time")
+    msg_length = conn.recv(Header).decode(Format)
+    while True:
+            if msg_length:
+                print("Received pickle")
+                msg = conn.recv(msg_length).decode(Format)
+                print(msg)
+                #conn, addr = ServerSocket2.recvfrom(1024)
+                print("pickle has been delivered")
+                print(pickle.loads(conn))
+                if msg == DisconnectFromServer:
+                    break
+
+        
+
+
 
 def StartServer():
     ServerSocket.listen() #Listening mode, hva enn det er 
@@ -43,6 +59,8 @@ def StartServer():
         conn.send(msg.encode("UTF-8"))
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
+        thread_udp = threading.Thread(target=handle_client2, args=(conn,addr))
+        thread_udp.start()
         print(f"Connections: {threading.activeCount()-1 }")
 
 StartServer() 
