@@ -1,2 +1,2 @@
 # Foersterepository
-dette er egentlig bare som en test mohahah
+Innlevering vår 2021 INF142
