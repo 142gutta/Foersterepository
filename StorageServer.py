@@ -15,11 +15,41 @@ ServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  #Selve Sockete
 ServerSocket2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #Smelle en UDP socket her for the lættis ?
 
 ServerSocket.bind(('', Port)) #Litt usikker på om man skal ha (' ', Port) her eller om Connectiongreiene mine funker
-
+ServerSocket2.bind(('', Port))
+print()
 
         #clientsocket.close()
 
 
+
+
+
+def GetWeather ():
+    while True:
+        list_weather = []      
+        data, addr = ServerSocket2.recvfrom(1024)
+        print ("received message"), data
+        pickle_list = (pickle.loads(data))
+        list_weather.append(pickle_list)
+        print(f"Complete list of weatherdata {list_weather}")
+
+
+
+def StartServer():
+    ServerSocket.listen() #Listening mode, hva enn det er
+    print("Server Online") 
+    thread_udp = threading.Thread(target=GetWeather())
+    thread_udp.start()
+
+StartServer()
+
+
+
+
+
+
+
+"""
 def handle_client (conn, addr) :  
     print(f"New connection: {addr} joined")   
     connected = True
@@ -32,7 +62,17 @@ def handle_client (conn, addr) :
                 break
                 
     conn.close()
+list_weather = []
 def handle_client2 (conn, addr):
+    while True:
+        conn, addr = ServerSocket2.recvform(1024)
+        print("Pickleman is here"), conn
+        picklelist = pickle.loads(conn)
+        list_weather.append(picklelist)
+
+print(list_weather)
+
+
     print("its pickle time")
     msg_length = conn.recv(Header).decode(Format)
     while True:
@@ -55,11 +95,11 @@ def StartServer():
     print("Server Online")
     while True:
         conn, addr = ServerSocket.accept()
-        msg = "Thanks for connecting "
+        msg = "Thanks for connecting"
         conn.send(msg.encode("UTF-8"))
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        thread_udp = threading.Thread(target=handle_client2, args=(conn,addr))
+        thread_udp = threading.Thread(target=handle_client2, args=(conn, addr))
         thread_udp.start()
         print(f"Connections: {threading.activeCount()-1 }")
 
@@ -74,7 +114,7 @@ StartServer()
 #     thread.start()
 #     print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")   
 
-
+"""
 
 
 
