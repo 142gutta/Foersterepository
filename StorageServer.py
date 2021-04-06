@@ -55,7 +55,7 @@ def StartServer():
     print("Server Online")
     while True:
         conn, addr = ServerSocket.accept()
-        msg = "Thanks for connecting motherfucker"
+        msg = "Thanks for connecting "
         conn.send(msg.encode("UTF-8"))
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
