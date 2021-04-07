@@ -1,36 +1,46 @@
-
-#FMI-klient
-
-#Kilde brukt til det meste: https://www.techwithtim.net/tutorials/socket-programming/
-
-
 import socket
-Header = 1024     #Vet ikke om denne er nødvendig
-Port = 5501
-StorageServer = socket.gethostbyname(socket.gethostname()) #Fra Youtube-video, denne finner riktig IP-adresse på alle PC'er.
-#StorageServer = "10.111.24.92"
-print(StorageServer)
-Connection = (StorageServer, Port)
-DisconnectMessage = "!Bye"
-#GetWeather = '!Weather' #Request Weather info
-#Disconnect = '!Bye' #Disconnect from server
+import json
+from time import sleep
 
-#Setter opp selve socketen, SOCK_Stream indikerer TCP socket.
-FMIclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-FMIclient.connect(Connection)
-#if connected:
-#    print('Connected to server')
-#else:
-#    print("not connected")
+HOST = socket.gethostbyname(socket.gethostname())
+PORT = 12342
+all_data = []
+tempreturedata = []
+raindata = []
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    command = ''
+    s.connect((HOST, PORT))
 
-while (text:= input(">")).lower() != DisconnectMessage:                 #Vettafaen hva dette er men  la inn en standard send & receive greie fra en annen forelesning, denne må vi nok 
-    FMIclient.sendto(text.encode("UTF-8"), Connection)                     #endre, da vi ønsker å motta en liste/fil/noe annet, mulig vi må bruke "pickle" modulen til dette. 
-    msg, addr = FMIclient.recvfrom(2048)
-    print(f"{StorageServer} says: {msg.decode()}")
+    while command != "exit":
 
+        command = input("Available commands:\n1. 'all' - Returns all data\n2. 'exit' - Exits CLI\nCommand: ")
 
+        if command == "all":
+            s.send(command.encode("utf-8"))
+            response = s.recv(100000)
+            print(json.loads(response))
+            """
+            all_data.append(json.loads(response))
+            
+            split_list = [i.split() for i in all_data]
+            print(all_data)
+            print(len(split_list))
+            
+            for i in range(len(all_data)):
+                if i % 2 == 0:
+                    raindata.append(all_data[i])
+                else:
+                    tempreturedata.append(all_data[i])
+        print("tempreturedata\raindata")
+        for t, p in zip(tempreturedata, raindata):
+            print(t, "\t\t", p)
+"""
+           
+        else:
+            print("Not a valid command")
 
-
-
-
-
+    # with conn:
+    #     print("Connected:", addr)
+    #     while True:
+    #         data = conn.recv(1024)
+    #         print(json.loads(data))
