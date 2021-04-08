@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
             d = bergen_station.temperature
             e = bergen_station.rain
-            #f = (d, e)
+            f = (d, e)
 
             data = json.dumps(d).encode('utf-8')
             data2 = json.dumps(e).encode('utf-8')
@@ -36,6 +36,7 @@ if __name__ == "__main__":
             
             s.sendto(data, (HOST, PORT))
             s.sendto(data2, (HOST, PORT))
+            print(f"Sending weatherdata to {HOST}")
             #s.sendto(data4, (HOST, PORT))
             #s.sendto(data5, (HOST, PORT))
 

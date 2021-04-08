@@ -1,6 +1,6 @@
 import socket
-import json
 from time import sleep
+import pickle
 
 HOST = socket.gethostbyname(socket.gethostname())
 PORT = 12342
@@ -17,30 +17,43 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         if command == "all":
             s.send(command.encode("utf-8"))
-            response = s.recv(100000)
-            print(json.loads(response))
-            """
-            all_data.append(json.loads(response))
+            response = s.recv(1024)
             
-            split_list = [i.split() for i in all_data]
-            print(all_data)
-            print(len(split_list))
-            
-            for i in range(len(all_data)):
+            for i in range(len(pickle.loads(response))):
                 if i % 2 == 0:
-                    raindata.append(all_data[i])
+                    tempreturedata.append(pickle.loads(response)[i])
                 else:
-                    tempreturedata.append(all_data[i])
-        print("tempreturedata\raindata")
-        for t, p in zip(tempreturedata, raindata):
-            print(t, "\t\t", p)
-"""
+                    raindata.append(pickle.loads(response)[i])
+                    
+            print("tempreturedata\traindata")
+            for t, p in zip(tempreturedata, raindata):
+                print(t, "\t\t", p)
+                tempreturedata = []
+                raindata = []
+
+        elif command == "current" :
+
+            s.send(command.encode("utf-8"))
+            response = s.recv(1024)
+            
+            for i in range(len(pickle.loads(response))):
+                if i % 2 == 0:
+                    tempreturedata.append(pickle.loads(response)[i])
+                else:
+                    raindata.append(pickle.loads(response)[i])
+            print(f"Here you have the newest forecast: < {tempreturedata[-1]}  celsius > and < {raindata[-1]} mm > of rain.")
+            tempreturedata = []
+            raindata = []
+
+
+
            
         else:
             print("Not a valid command")
-
+"""
     # with conn:
     #     print("Connected:", addr)
     #     while True:
     #         data = conn.recv(1024)
     #         print(json.loads(data))
+    """
