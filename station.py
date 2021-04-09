@@ -22,9 +22,9 @@ class StationSimulator:
     month
         Month.
     avg_high_temp
-        Average high °C
+        Average high C
     avg_low_temp
-        Average low °C
+        Average low C
     avg_precipitation
         Average precipitation mm
     avg_precipitation_days

@@ -4,9 +4,9 @@ from station import StationSimulator
 import json
 
 
-HOST = socket.gethostbyname(socket.gethostname())
-PORT = 11111
-SIM_INT = 2
+HOST = socket.gethostbyname(socket.gethostname())#Gets local IP-address, stores it as variable HOST
+PORT = 11111#Sets 11111 as PORT
+SIM_INT = 2#Sets variable SIM_INT equal to 2
 
 if __name__ == "__main__":
 
@@ -15,31 +15,22 @@ if __name__ == "__main__":
     # Turn on the simulator
     bergen_station.turn_on()
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:#Sets UDP socket as s
 
-        while True:
-            #Data3 = {"Temp": [] , "Rain": [], }
+        while True:#While loop
 
+            Tempreture_data = bergen_station.temperature#Stores tempreture data from bergen_station as Tempreture_data
+            Rain_data = bergen_station.rain#Stores rain data from bergen_station as Rain_data
 
-            d = bergen_station.temperature
-            e = bergen_station.rain
-            #f = (d, e)
-
-            data = json.dumps(d).encode('utf-8')
-            data2 = json.dumps(e).encode('utf-8')
-            #data5 = json.dumps(f).encode('utf-8')
-
-            #Data3["Temp"].append(d)
-            #Data3["Rain"].append(e)
-
-            #data4 = json.dumps(Data3).encode('utf-8')
+            Tempreture_data_send = json.dumps(Tempreture_data).encode('utf-8')#Encodes Tempreture_data with json.dumps
+            Rain_data_send = json.dumps(Rain_data).encode('utf-8')#Encodes Rain_data with json_dumps
+    
             
-            s.sendto(data, (HOST, PORT))
-            s.sendto(data2, (HOST, PORT))
-            #s.sendto(data4, (HOST, PORT))
-            #s.sendto(data5, (HOST, PORT))
-
-            sleep(SIM_INT)
+            s.sendto(Tempreture_data_send, (HOST, PORT))#Sends tempreture data to storage.py
+            s.sendto(Rain_data_send, (HOST, PORT))#Sends rain data to storage.py
+            print(f"Sending weather data to {HOST}")#print "Sending weather data to" HOST
+    
+            sleep(SIM_INT)#Sleeps for 2 seconds
 
     # Shut down the simulation
     bergen_station.shut_down()
